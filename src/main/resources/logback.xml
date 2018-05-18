@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+
+	<property name="GLOBAL_LOG_PATTERN" value="%d - %c - %p [%t] %X{logTraceId} [%C{0}:%M:%L] - %m%n" />
+	<property name="CATALINA_LOGS" value="${CATALINA_HOME:-..}/logs"/>
+
+	<appender name="runAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${CATALINA_LOGS:-${java.io.tmpdir:-/tmp}}/runlogs/run.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${CATALINA_LOGS:-${java.io.tmpdir:-/tmp}}/runlogs/run.log.%d{yyyy-MM-dd}.%i
+			</FileNamePattern>
+			<MaxHistory>10</MaxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${GLOBAL_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${CATALINA_LOGS:-${java.io.tmpdir:-/tmp}}/errorlogs/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${CATALINA_LOGS:-${java.io.tmpdir:-/tmp}}/errorlogs/error.log.%d{yyyy-MM-dd}.%i
+			</FileNamePattern>
+			<MaxHistory>10</MaxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${GLOBAL_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="runLogger" level="INFO">
+		<appender-ref ref="runAppender" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="runAppender"/>
+	</root>
+
+	<logger name="errorLogger" level="ERROR">
+		<appender-ref ref="errorAppender" />
+	</logger>
+</configuration>
